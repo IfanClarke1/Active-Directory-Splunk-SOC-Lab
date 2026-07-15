@@ -1,0 +1,21 @@
+Active Directory Users and Groups
+
+Groups
+IT_Admins
+Helpdesk
+Finance
+HR
+Sales
+
+Users
+John Smith
+Alice Johnson
+Bob Williams
+Sarah Brown
+David Wilson
+
+Assignments
+Alice Johnson - Finance
+Sarah Brown - HR
+Bob Williams - Sales
+John Smith - IT_Adminss
