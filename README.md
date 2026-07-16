@@ -46,3 +46,9 @@ I created the following alerts in Splunk:
 * User Account Created (index=* EventCode=4720)
 
 * User Added to Privileged Group (index=* EventCode=4728)
+
+I then activated all my new alerts as a test:
+
+<img width="725" height="360" alt="image" src="https://github.com/user-attachments/assets/eb5fb9ac-f042-4b8e-b9e3-435b94246571" />
+
+
