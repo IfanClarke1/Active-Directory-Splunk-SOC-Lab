@@ -24,4 +24,25 @@ The lap replicates a small corporate network where a Windows Server 2022 Domain 
 **Kali Linux**
 * Attack simulation 
 
+## Objectives
 
+The project aims to simulate common security scenarios such as:
+
+* Brute force attacks
+* password spraying
+* Privileged account changes
+* suspicious authentication activity
+* PowerShell abuse
+* Account manipulation
+
+## Detection Engineering
+
+I created the following alerts in Splunk:
+
+* Failed Login (index=* EventCode=4625)
+
+* Successful Login (index=* EventCode=4624)
+
+* User Account Created (index=* EventCode=4720)
+
+* User Added to Privileged Group (index=* EventCode=4728)
