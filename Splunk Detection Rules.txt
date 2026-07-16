@@ -1,0 +1,13 @@
+Splunk Detection Rules
+
+Failed Login
+index=* EventCode=4625
+
+Successful Login
+index=* EventCode=4624
+
+User Account Created
+index=* EventCode=4720
+
+User Added to Privileged Group
+index=* EventCode=4728
