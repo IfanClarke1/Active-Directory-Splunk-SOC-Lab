@@ -51,6 +51,20 @@ I then activated all my new alerts as a test:
 
 <img width="725" height="360" alt="image" src="https://github.com/user-attachments/assets/eb5fb9ac-f042-4b8e-b9e3-435b94246571" />
 
+## Incidents
+
+From there I planned out the incidents I wanted to simulate and respond to. The ones I came up with were as follows:
+
+* Multiple Failed Logins
+* New User Created
+* Privileged Group Change
+* Encoded Powershell
+* PowerShell Network Connections
+
+### Incident 001 - Multiple Failed Logins
+
+
+
 
 
 
