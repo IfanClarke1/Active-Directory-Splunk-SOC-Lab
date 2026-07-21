@@ -63,6 +63,48 @@ From there I planned out the incidents I wanted to simulate and respond to. The 
 
 ### Incident 001 - Multiple Failed Logins
 
+**Overview**
+The first incident I simulated and responded to was an instance of multiple failed logins on a single account, as this suggests a brute force attack.
+
+**Attack**
+
+Repeated failed authentication attempts were made against the administrator account
+
+**Detection**
+
+I carried out the following SPL Query:
+
+index=* EventCode=4625
+| stats count by Account_Name, Source_Network_Address
+| where count >= 3
+
+This searches for instances of at least 3 failed logins (event 4625), and provides the name of the account and network address of the password attempt.
+
+Here you can see the results:
+
+<img width="728" height="319" alt="image" src="https://github.com/user-attachments/assets/02556ff6-23ed-4384-92df-0f1d9510cc55" />
+
+**Investigation**
+I reviewed:
+* Source workstation
+* Username targeted
+* number of failures
+* Timeframe
+* authentication type
+
+**Findings**
+
+The alert found multiple failed password attempts. However, the IP address of the source of the requests is an internal IP address (127.0.0.1) so I have deemed this as regular behaviour. This is a **false positive** alert.
+
+**Outcome**
+
+* Alert Classification: False Positive
+* Root Cause: Authorised security testing
+* Recommendation: No remediation required. Consider excluding events generated from internal sources brute-force detections.
+
+### Incident 002 - New User Created
+
+
 
 
 
