@@ -101,6 +101,7 @@ The alert found multiple failed password attempts. However, the IP address of th
 **Outcome**
 
 * Alert Classification: False Positive
+* MITRE ATT&CK: T1110, Brute Force
 * Root Cause: Authorised security testing
 * Recommendation: No remediation required. Consider excluding events generated from internal sources brute-force detections.
 
@@ -112,11 +113,50 @@ I simulated the creation of a new user on Active Directory and investigated it u
 
 **Attack**
 
-I created a new user via Active Directory
+I created a new user via Active Directory with the following information:
+
+<img width="375" height="260" alt="image" src="https://github.com/user-attachments/assets/f8cdb57a-efa8-492f-96e5-dcf3e5883884" />
+
 
 **Detection**
 
+Above, you will find that I created an alert - User Account Created (index=* EventCode=4720). When the user was created, this produced an alert.
 
+
+<img width="685" height="265" alt="image" src="https://github.com/user-attachments/assets/7eadfa9e-dd5c-4aad-85f7-565194f7916a" />
+
+
+Extra information available here:
+
+
+<img width="410" height="290" alt="image" src="https://github.com/user-attachments/assets/a470f8a4-c46e-4225-9f1c-7f8f8de521a6" />
+
+
+From here, I can ascertain whether this is legitimate.
+
+**Investigation**
+
+* Confirmed Event ID 4720
+* Reviewed the account responsible for creating the user
+* Verified the creation of the account occured on the Domain Controller
+* Assessed whether the account creation was authorised
+
+**Findings**
+
+The alert correctly found the creation of a new user account. The administrator account was responsible for it and it occured on the Domain Controller. I have deemed this an authorised change.
+
+**Outcome**
+
+* Alert Classification: True Positive (Authorised activity)
+* MITRE ATT&CK: T1136
+* Root Cause: Authorised account creation
+* Recommendation: No immediate action required. Ensure user account creation follows the change management process and is appropriately documented
+
+### Incident 003 - Privileged Group Change
+
+**Overview**
+
+Next, I responded to a new user being added to a privileged group
 
 
 
