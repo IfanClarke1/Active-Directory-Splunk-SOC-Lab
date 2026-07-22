@@ -156,7 +156,7 @@ The alert correctly found the creation of a new user account. The administrator 
 
 **Overview**
 
-Next, I responded to a new user being added to a privileged group
+Next, I responded to a new user being added to a privileged group and investigated it using Splunk
 
 
 
