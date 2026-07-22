@@ -85,6 +85,7 @@ Here you can see the results:
 <img width="728" height="319" alt="image" src="https://github.com/user-attachments/assets/02556ff6-23ed-4384-92df-0f1d9510cc55" />
 
 **Investigation**
+
 I reviewed:
 * Source workstation
 * Username targeted
