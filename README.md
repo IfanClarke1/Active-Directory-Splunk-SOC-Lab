@@ -1,11 +1,11 @@
 # Active-Directory-Splunk-SOC-Lab
-A simulated SOC environment using Active DIrectory, Splunk SIEM, Windows Server, Ubuntu, and Kali Linux to investigate security incidents
+A simulated SOC environment using Active Directory, Splunk SIEM, Windows Server, Ubuntu, and Kali Linux to investigate security incidents
 
 ## Overview
 
 This project is a simulated enterprise Active Directory environment designed to demonstrate SOC monitoring, Windows security event monitoring, threat detection and incident investigation.
 
-The lap replicates a small corporate network where a Windows Server 2022 Domain Controller provides identity and access management, while Splunk acts as the SIEM. I am running Splunk Universal Forwarder to send Windows logs to my Splunk instance in Ubuntu
+The lab replicates a small corporate network where a Windows Server 2022 Domain Controller provides identity and access management, while Splunk acts as the SIEM. I am running Splunk Universal Forwarder to send Windows Event Logs to a Splunk Enterprise instance running on Ubuntu.
 
 ## Lab Architecture
 
@@ -29,9 +29,9 @@ The lap replicates a small corporate network where a Windows Server 2022 Domain 
 The project aims to simulate common security scenarios such as:
 
 * Brute force attacks
-* password spraying
+* Password spraying
 * Privileged account changes
-* suspicious authentication activity
+* Suspicious authentication activity
 * PowerShell abuse
 * Account manipulation
 
@@ -64,6 +64,7 @@ From there I planned out the incidents I wanted to simulate and respond to. The 
 ### Incident 001 - Multiple Failed Logins
 
 **Overview**
+
 The first incident I simulated and responded to was an instance of multiple failed logins on a single account, as this suggests a brute force attack.
 
 **Attack**
@@ -89,9 +90,9 @@ Here you can see the results:
 I reviewed:
 * Source workstation
 * Username targeted
-* number of failures
+* Number of failures
 * Timeframe
-* authentication type
+* Authentication type
 
 **Findings**
 
@@ -104,6 +105,17 @@ The alert found multiple failed password attempts. However, the IP address of th
 * Recommendation: No remediation required. Consider excluding events generated from internal sources brute-force detections.
 
 ### Incident 002 - New User Created
+
+**Overview**
+
+I simulated the creation of a new user on Active Directory and investigated it using Splunk, assessing whether the activity was authorised.
+
+**Attack**
+
+I created a new user via Active Directory
+
+**Detection**
+
 
 
 
