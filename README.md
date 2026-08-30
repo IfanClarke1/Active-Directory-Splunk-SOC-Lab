@@ -156,7 +156,37 @@ The alert correctly found the creation of a new user account. The administrator 
 
 **Overview**
 
-Next, I responded to a new user being added to a privileged group and investigated it using Splunk
+Next, I responded to a new user being added to a privileged group and investigated it using Splunk.
+
+**Attack**
+
+I added the user David Wilson to the Finance group via Active Directory.
+
+**Detection**
+
+The "User added to privileged group" alert I created earlier was activated and it appeared in my alerts
+
+<img width="730" height="404" alt="image" src="https://github.com/user-attachments/assets/41b6518d-9b9c-4b52-9863-12bc3e36099b" />
+
+
+**Investigation**
+
+* Confirmed Event 4728
+* Reviewed the account responsible for creating the user
+* Verified the creation of the account occured on the Domain Controller
+* Assessed whether the account creation was authorised
+
+
+**Findings**
+
+The alert correctly found a user being added to a privileged group. The administrator account was responsible for it and it occured on the Domain Controller. I have deemed this an authorised change.
+
+**Outcome**
+* Alert Classification: True Positive (Authorised activity)
+* MITRE ATT&CK: T1098.007
+* Root Cause: Authorised change to a user's privileges
+* Recommendation: No immediate action required. Ensure the privilege escalation follows the change management process and is appropriately documented
+
 
 
 
