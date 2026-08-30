@@ -172,9 +172,9 @@ The "User added to privileged group" alert I created earlier was activated and i
 **Investigation**
 
 * Confirmed Event 4728
-* Reviewed the account responsible for creating the user
-* Verified the creation of the account occurred on the Domain Controller
-* Assessed whether the account creation was authorised
+* Reviewed the account responsible for changing the privileges
+* Verified the privilege change occurred on the Domain Controller
+* Assessed whether the privilege change was authorised
 
 
 **Findings**
@@ -191,6 +191,7 @@ The alert correctly found a user being added to a privileged group. The administ
 ### Incident 004 - Encoded Powershell
 
 **Attack**
+
 I wanted to simulate a potentially malicious encoded Powershell command. I did some research and found this base64 code that just means "Write-Host 'Encoded PowerShell test'": VwByAGkAdABlAC0ASABvAHMAdAAgACcARQBuAGMAbwBkAGUAZAAgAFAAbwB3AGUAcgBTAGgAZQBsAGwAIAB0AGUAcwB0ACcA. I ran it in the following command: 
 powershell.exe -EncodedCommand VwByAGkAdABlAC0ASABvAHMAdAAgACcARQBuAGMAbwBkAGUAZAAgAFAAbwB3AGUAcgBTAGgAZQBsAGwAIAB0AGUAcwB0ACcA.
 
@@ -198,6 +199,31 @@ powershell.exe -EncodedCommand VwByAGkAdABlAC0ASABvAHMAdAAgACcARQBuAGMAbwBkAGUAZ
 
 
 **Detection**
+
+I created the following alert to pick up on encoded commands in PowerShell: "index=main sourcetype="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=1 "-enc" OR "-EncodedCommand" OR "-ec"
+| table _time, host, _raw" and saved it as an alert called "Encoded Command - Powershell".
+
+You can see it was activated here:
+
+<img width="728" height="324" alt="Screenshot 2026-08-30 173038" src="https://github.com/user-attachments/assets/63dc0fea-c6b6-429b-8b1c-e7163dba5f48" />
+
+**Investigation**
+
+* Verified an encoded command had taken place
+* Looked at the user that carried it out and what the command did
+* Assessed whether the behaviour was malicious
+
+**Findings**
+
+The encoded command was just a command that printed "Encoded PowerShell test" to PowerShell so it is not malicious in nature. It was carried out by the administrator on the Domain Controller.
+
+**Outcome**
+* Alert Classification: True Positive (Authorised activity)
+* MITRE ATT&CK: T1059.001 – Command and Scripting Interpreter: PowerShell
+* Root Cause: Authorised administrative activity involving an encoded PowerShell command. The command was executed as part of a legitimate administrative task and was confirmed to be authorised.
+* Recommendation: No immediate action required. Validate that the activity was performed by an authorised administrator and, where applicable, ensure the change or administrative action is documented in accordance with the organisation's change-management process. Continue monitoring for similar PowerShell activity originating from unexpected users, hosts, or processes.
+
+
 
 
 
