@@ -173,7 +173,7 @@ The "User added to privileged group" alert I created earlier was activated and i
 
 * Confirmed Event 4728
 * Reviewed the account responsible for creating the user
-* Verified the creation of the account occured on the Domain Controller
+* Verified the creation of the account occurred on the Domain Controller
 * Assessed whether the account creation was authorised
 
 
@@ -187,6 +187,17 @@ The alert correctly found a user being added to a privileged group. The administ
 * Root Cause: Authorised change to a user's privileges
 * Recommendation: No immediate action required. Ensure the privilege escalation follows the change management process and is appropriately documented
 
+
+### Incident 004 - Encoded Powershell
+
+**Attack**
+I wanted to simulate a potentially malicious encoded Powershell command. I did some research and found this base64 code that just means "Write-Host 'Encoded PowerShell test'": VwByAGkAdABlAC0ASABvAHMAdAAgACcARQBuAGMAbwBkAGUAZAAgAFAAbwB3AGUAcgBTAGgAZQBsAGwAIAB0AGUAcwB0ACcA. I ran it in the following command: 
+powershell.exe -EncodedCommand VwByAGkAdABlAC0ASABvAHMAdAAgACcARQBuAGMAbwBkAGUAZAAgAFAAbwB3AGUAcgBTAGgAZQBsAGwAIAB0AGUAcwB0ACcA.
+
+<img width="507" height="330" alt="image" src="https://github.com/user-attachments/assets/c3b7dbc7-2290-4885-b824-98ae58f08caa" />
+
+
+**Detection**
 
 
 
