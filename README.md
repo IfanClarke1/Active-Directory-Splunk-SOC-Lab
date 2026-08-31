@@ -39,13 +39,13 @@ The project aims to simulate common security scenarios such as:
 
 I created the following alerts in Splunk:
 
-* Failed Login (index=* EventCode=4625)
+* Failed Login (index=main EventCode=4625)
 
-* Successful Login (index=* EventCode=4624)
+* Successful Login (index=main EventCode=4624)
 
-* User Account Created (index=* EventCode=4720)
+* User Account Created (index=main EventCode=4720)
 
-* User Added to Privileged Group (index=* EventCode=4728)
+* User Added to Privileged Group (index=main EventCode=4728)
 
 I then activated all my new alerts as a test:
 
@@ -75,7 +75,7 @@ Repeated failed authentication attempts were made against the administrator acco
 
 I carried out the following SPL Query:
 
-index=* EventCode=4625
+index=main EventCode=4625
 | stats count by Account_Name, Source_Network_Address
 | where count >= 3
 
@@ -120,7 +120,7 @@ I created a new user via Active Directory with the following information:
 
 **Detection**
 
-Above, you will find that I created an alert - User Account Created (index=* EventCode=4720). When the user was created, this produced an alert.
+Above, you will find that I created an alert - User Account Created (index=main EventCode=4720). When the user was created, this produced an alert.
 
 
 <img width="685" height="265" alt="image" src="https://github.com/user-attachments/assets/7eadfa9e-dd5c-4aad-85f7-565194f7916a" />
@@ -242,7 +242,7 @@ I carried out the following command within PowerShell, in order to simulate a ne
 
 **Detection**
 
-I created the following alert: 'index=* source="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=3' and saved as Powershell Network Connection.
+I created the following alert: 'index=main source="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=3' and saved as Powershell Network Connection.
 
 It was activated here:
 
