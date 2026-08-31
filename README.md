@@ -244,10 +244,26 @@ I carried out the following command within PowerShell, in order to simulate a ne
 
 I created the following alert: 'index=* source="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=3' and saved as Powershell Network Connection.
 
-It was activated here: <img width="719" height="322" alt="image" src="https://github.com/user-attachments/assets/cff019df-ac38-4b2c-9063-701666505523" />
+It was activated here:
+
+<img width="719" height="322" alt="image" src="https://github.com/user-attachments/assets/cff019df-ac38-4b2c-9063-701666505523" />
 
 **Investigation**
+* Verified a PowerShell network connection had taken place
+* Looked at the user that carried it out and what the command did
+* Assessed whether the behaviour was malicious#
 
+**Findings**
+
+The network connection was to www.example.com which I have established as non-malicious using VirusTotal: 
+
+
+<img width="929" height="271" alt="image" src="https://github.com/user-attachments/assets/79dcde21-31cf-4de3-b3e3-fbc36977f4ec" />
+
+
+I believe this is legitimate activity.
+
+**Outcome**
 
 
 
