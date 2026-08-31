@@ -147,7 +147,7 @@ The alert correctly found the creation of a new user account. The administrator 
 
 **Outcome**
 
-* Alert Classification: True Positive (Authorised activity)
+* Alert Classification: False Positive (Authorised activity)
 * MITRE ATT&CK: T1136
 * Root Cause: Authorised account creation
 * Recommendation: No immediate action required. Ensure user account creation follows the change management process and is appropriately documented
@@ -182,7 +182,7 @@ The "User added to privileged group" alert I created earlier was activated and i
 The alert correctly found a user being added to a privileged group. The administrator account was responsible for it and it occured on the Domain Controller. I have deemed this an authorised change.
 
 **Outcome**
-* Alert Classification: True Positive (Authorised activity)
+* Alert Classification: False Positive (Authorised activity)
 * MITRE ATT&CK: T1098.007
 * Root Cause: Authorised change to a user's privileges
 * Recommendation: No immediate action required. Ensure the privilege escalation follows the change management process and is appropriately documented
@@ -222,7 +222,7 @@ The encoded command was just a command that printed "Encoded PowerShell test" to
 
 **Outcome**
 
-* Alert Classification: True Positive (Authorised activity)
+* Alert Classification: False Positive (Authorised activity)
 * MITRE ATT&CK: T1059.001 – Command and Scripting Interpreter: PowerShell
 * Root Cause: Authorised administrative activity involving an encoded PowerShell command. The command was executed as part of a legitimate administrative task and was confirmed to be authorised.
 * Recommendation: No immediate action required. Validate that the activity was performed by an authorised administrator and, where applicable, ensure the change or administrative action is documented in accordance with the organisation's change-management process. Continue monitoring for similar PowerShell activity originating from unexpected users, hosts, or processes.
@@ -264,6 +264,10 @@ The network connection was to www.example.com which I have established as non-ma
 I believe this is legitimate activity.
 
 **Outcome**
+* Alert Classification: False Positive (Legitimate activity)
+* MITRE ATT&CK: T1059.001 (Command and Scripting Interpreter: PowerShell)
+* Root Cause: PowerShell connection to example.com
+* Recommendation: No immediate action required
 
 
 
