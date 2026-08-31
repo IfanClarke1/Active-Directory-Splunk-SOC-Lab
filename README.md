@@ -190,6 +190,9 @@ The alert correctly found a user being added to a privileged group. The administ
 
 ### Incident 004 - Encoded Powershell
 
+**Overview**
+I wanted to simulate an encoded PowerShell command. Attackers will often encode PowerShell commands to help prevent the activity being caught so it is an important thing to look out for.
+
 **Attack**
 
 I wanted to simulate a potentially malicious encoded Powershell command. I did some research and found this base64 code that just means "Write-Host 'Encoded PowerShell test'": VwByAGkAdABlAC0ASABvAHMAdAAgACcARQBuAGMAbwBkAGUAZAAgAFAAbwB3AGUAcgBTAGgAZQBsAGwAIAB0AGUAcwB0ACcA. I ran it in the following command: 
@@ -218,10 +221,25 @@ You can see it was activated here:
 The encoded command was just a command that printed "Encoded PowerShell test" to PowerShell so it is not malicious in nature. It was carried out by the administrator on the Domain Controller.
 
 **Outcome**
+
 * Alert Classification: True Positive (Authorised activity)
 * MITRE ATT&CK: T1059.001 – Command and Scripting Interpreter: PowerShell
 * Root Cause: Authorised administrative activity involving an encoded PowerShell command. The command was executed as part of a legitimate administrative task and was confirmed to be authorised.
 * Recommendation: No immediate action required. Validate that the activity was performed by an authorised administrator and, where applicable, ensure the change or administrative action is documented in accordance with the organisation's change-management process. Continue monitoring for similar PowerShell activity originating from unexpected users, hosts, or processes.
+
+
+### Incident 005 - PowerShell Network Connections
+
+**Overview**
+
+I wanted to simulate a network connection being established via PowerShell
+
+**Attack**
+
+I carried out the following command within PowerShell, in order to simulate a network connection via PowerShell:
+
+<img width="498" height="210" alt="image" src="https://github.com/user-attachments/assets/581dd6d4-36bf-4561-9680-3bd2f791b3f2" />
+
 
 
 
