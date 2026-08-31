@@ -240,6 +240,16 @@ I carried out the following command within PowerShell, in order to simulate a ne
 
 <img width="498" height="210" alt="image" src="https://github.com/user-attachments/assets/581dd6d4-36bf-4561-9680-3bd2f791b3f2" />
 
+**Detection**
+
+I created the following alert: 'index=* source="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=3' and saved as Powershell Network Connection.
+
+It was activated here: <img width="719" height="322" alt="image" src="https://github.com/user-attachments/assets/cff019df-ac38-4b2c-9063-701666505523" />
+
+**Investigation**
+
+
+
 
 
 
