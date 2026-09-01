@@ -248,42 +248,65 @@ The activity was therefore classified as potentially malicious and escalated for
 
 **Overview**
 
-I wanted to simulate a network connection being established via PowerShell
+I wanted to simulate a network connection being established by PowerShell and investigate whether the resulting activity could be considered suspicious or malicious.
+
+PowerShell is commonly used for legitimate administration but can also be abused by attackers to perform reconnaissance, download payloads, or communicate with external infrastructure. Monitoring network connections initiated by PowerShell can therefore provide useful context when investigating potentially malicious activity.
 
 **Attack**
 
-I carried out the following command within PowerShell, in order to simulate a network connection via PowerShell:
+I simulated a network connection being established through PowerShell by executing a command that connected to www.example.com.
+
+The purpose of the simulation was to generate a Sysmon Event ID 3 (Network Connection) event that could be detected and investigated in Splunk.
+
+The command was executed within PowerShell on the Windows Server/Domain Controller.
 
 <img width="498" height="210" alt="image" src="https://github.com/user-attachments/assets/581dd6d4-36bf-4561-9680-3bd2f791b3f2" />
 
 **Detection**
 
-I created the following alert: 'index=main source="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=3' and saved as Powershell Network Connection.
+I created the following Splunk alert to detect network connections recorded by Sysmon:
 
-It was activated here:
+'index=main source="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=3
+| search process_name="*powershell.exe"
+| table _time host user process_name destination_ip destination_port protocol' 
+
+and saved as Powershell Network Connection.
+
+The alert was successfully triggered when the simulated network connection was established.
+
+Sysmon Event ID 3 records network connections made by processes and provides useful information such as the source process, source and destination addresses, ports and protocol.
 
 <img width="719" height="322" alt="image" src="https://github.com/user-attachments/assets/cff019df-ac38-4b2c-9063-701666505523" />
 
 **Investigation**
-* Verified a PowerShell network connection had taken place
-* Looked at the user that carried it out and what the command did
-* Assessed whether the behaviour was malicious#
+I investigated the alert to determine:
+
+* Which process initiated the network connection
+* Which user account was responsible for the activity
+* The destination IP address and/or domain
+* The destination port and network protocol
+* Whether the destination was associated with known malicious infrastructure
+* Whether the activity appeared consistent with legitimate administrative behaviour
+* Whether any additional suspicious activity occurred around the same time
 
 **Findings**
 
-The network connection was to www.example.com which I have established as non-malicious using VirusTotal: 
+The investigation confirmed that a network connection had been established by PowerShell.
+
+The connection was made to www.example.com. I investigated the destination using VirusTotal, which did not identify the destination as malicious.
 
 
 <img width="929" height="271" alt="image" src="https://github.com/user-attachments/assets/79dcde21-31cf-4de3-b3e3-fbc36977f4ec" />
 
+I also reviewed the user and process responsible for the connection and found no additional indicators of compromise associated with the activity. The connection was therefore assessed as benign and consistent with the intended simulation.
 
-I believe this is legitimate activity.
+It is important to note that a clean VirusTotal result does not by itself prove that network activity is legitimate. The destination reputation was considered alongside the process, user, destination and surrounding activity when reaching the final assessment.
 
 **Outcome**
-* Alert Classification: True Positive (Legitimate activity)
-* MITRE ATT&CK: T1059.001 (Command and Scripting Interpreter: PowerShell)
-* Root Cause: PowerShell connection to example.com
-* Recommendation: No immediate action required
+* Alert Classification: True Positive – Benign Activity
+* MITRE ATT&CK: T1059.001 – Command and Scripting Interpreter: PowerShell
+* Root Cause: An authorised PowerShell process established an outbound network connection to www.example.com as part of a controlled security lab simulation.
+* Recommendation: No immediate action required. Continue monitoring PowerShell network activity and investigate connections to unknown, suspicious or known-malicious destinations. Where appropriate, correlate network connection events with process creation, user activity and other endpoint telemetry to identify potentially malicious PowerShell behaviour.
 
 
 
