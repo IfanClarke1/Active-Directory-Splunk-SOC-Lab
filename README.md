@@ -72,7 +72,7 @@ Repeated failed authentication attempts were made against the administrator acco
 
 I carried out the following SPL Query:
 
-index=main EventCode=4625
+index=* EventCode=4625
 | stats count by Account_Name, Source_Network_Address
 | where count >= 3
 
@@ -279,6 +279,7 @@ Sysmon Event ID 3 records network connections made by processes and provides use
 <img width="719" height="322" alt="image" src="https://github.com/user-attachments/assets/cff019df-ac38-4b2c-9063-701666505523" />
 
 **Investigation**
+
 I investigated the alert to determine:
 
 * Which process initiated the network connection
@@ -303,6 +304,7 @@ I also reviewed the user and process responsible for the connection and found no
 It is important to note that a clean VirusTotal result does not by itself prove that network activity is legitimate. The destination reputation was considered alongside the process, user, destination and surrounding activity when reaching the final assessment.
 
 **Outcome**
+
 * Alert Classification: True Positive – Benign Activity
 * MITRE ATT&CK: T1059.001 – Command and Scripting Interpreter: PowerShell
 * Root Cause: An authorised PowerShell process established an outbound network connection to www.example.com as part of a controlled security lab simulation.
