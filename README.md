@@ -1,5 +1,5 @@
 # Active-Directory-Splunk-SOC-Lab
-A simulated SOC environment using Active Directory, Splunk SIEM, Windows Server, Ubuntu, and Kali Linux to investigate security incidents
+A simulated SOC environment using Active Directory, Splunk SIEM, Windows Server, and Ubuntu to investigate security incidents
 
 ## Overview
 
@@ -21,9 +21,6 @@ The lab replicates a small corporate network where a Windows Server 2022 Domain 
 * Log Ingestion and Analysis
 * Detection rules and dashboards
 
-**Kali Linux**
-* Attack simulation 
-
 ## Objectives
 
 The project aims to simulate common security scenarios such as:
@@ -39,13 +36,13 @@ The project aims to simulate common security scenarios such as:
 
 I created the following alerts in Splunk:
 
-* Failed Login (index=main EventCode=4625)
+* Failed Login (index=main source="WinEventLog:Security" EventCode=4625)
 
-* Successful Login (index=main EventCode=4624)
+* Successful Login (index=main source="WinEventLog:Security" EventCode=4624)
 
-* User Account Created (index=main EventCode=4720)
+* User Account Created (index=main source="WinEventLog:Security" EventCode=4720)
 
-* User Added to Privileged Group (index=main EventCode=4728)
+* User Added to Privileged Group (index=main source="WinEventLog:Security" EventCode=4728)
 
 I then activated all my new alerts as a test:
 
@@ -96,7 +93,7 @@ I reviewed:
 
 **Findings**
 
-The alert found multiple failed password attempts. However, the IP address of the source of the requests is an internal IP address (127.0.0.1) so I have deemed this as regular behaviour. This is a **false positive** alert.
+The alert found multiple failed password attempts. However, the IP address of the source of the requests is an internal IP address (127.0.0.1) so I have deemed this as regular behaviour(i.e mistakenly writing the wrong password). This is a **false positive** alert.
 
 **Outcome**
 
@@ -147,7 +144,7 @@ The alert correctly found the creation of a new user account. The administrator 
 
 **Outcome**
 
-* Alert Classification: False Positive (Authorised activity)
+* Alert Classification: True Positive (Authorised activity)
 * MITRE ATT&CK: T1136
 * Root Cause: Authorised account creation
 * Recommendation: No immediate action required. Ensure user account creation follows the change management process and is appropriately documented
@@ -182,7 +179,7 @@ The "User added to privileged group" alert I created earlier was activated and i
 The alert correctly found a user being added to a privileged group. The administrator account was responsible for it and it occured on the Domain Controller. I have deemed this an authorised change.
 
 **Outcome**
-* Alert Classification: False Positive (Authorised activity)
+* Alert Classification: True Positive (Authorised activity)
 * MITRE ATT&CK: T1098.007
 * Root Cause: Authorised change to a user's privileges
 * Recommendation: No immediate action required. Ensure the privilege escalation follows the change management process and is appropriately documented
@@ -191,19 +188,26 @@ The alert correctly found a user being added to a privileged group. The administ
 ### Incident 004 - Encoded Powershell
 
 **Overview**
-I wanted to simulate an encoded PowerShell command. Attackers will often encode PowerShell commands to help prevent the activity being caught so it is an important thing to look out for.
+I wanted to simulate potentially malicious PowerShell activity using an encoded command. Attackers commonly use PowerShell and command encoding to obfuscate commands and make malicious activity more difficult to identify during initial detection and investigation. This makes encoded PowerShell activity a useful behaviour for a SOC analyst to investigate.
+
 
 **Attack**
 
-I wanted to simulate a potentially malicious encoded Powershell command. I did some research and found this base64 code that just means "Write-Host 'Encoded PowerShell test'": VwByAGkAdABlAC0ASABvAHMAdAAgACcARQBuAGMAbwBkAGUAZAAgAFAAbwB3AGUAcgBTAGgAZQBsAGwAIAB0AGUAcwB0ACcA. I ran it in the following command: 
+I simulated a suspicious encoded PowerShell command executed on the Domain Controller. The command was encoded using Base64 and executed using PowerShell's -EncodedCommand parameter.
+
+The decoded command performed system and user enumeration, which could be consistent with reconnaissance activity following initial access.
+
+The command was executed using:
 powershell.exe -EncodedCommand VwByAGkAdABlAC0ASABvAHMAdAAgACcARQBuAGMAbwBkAGUAZAAgAFAAbwB3AGUAcgBTAGgAZQBsAGwAIAB0AGUAcwB0ACcA.
+
+The activity generated a Sysmon Event ID 1 (Process Creation) event, which was forwarded to Splunk for detection.
 
 <img width="507" height="330" alt="image" src="https://github.com/user-attachments/assets/c3b7dbc7-2290-4885-b824-98ae58f08caa" />
 
 
 **Detection**
 
-I created the following alert to pick up on encoded commands in PowerShell: "index=main sourcetype="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=1 "-enc" OR "-EncodedCommand" OR "-ec"
+I created the following Splunk alert to identify PowerShell processes using common encoded-command parameters: "index=main sourcetype="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=1 "-enc" OR "-EncodedCommand" OR "-ec"
 | table _time, host, _raw" and saved it as an alert called "Encoded Command - Powershell".
 
 You can see it was activated here:
@@ -212,20 +216,32 @@ You can see it was activated here:
 
 **Investigation**
 
-* Verified an encoded command had taken place
-* Looked at the user that carried it out and what the command did
-* Assessed whether the behaviour was malicious
+I investigated the alert to determine:
+
+* Which user executed the PowerShell process
+* Which host the command originated from
+* The parent process that launched PowerShell
+* The command-line arguments used
+* Whether the PowerShell command was encoded
+* What the decoded command attempted to do
+* Whether the activity was consistent with legitimate administrative behaviour
+* Whether there were any additional indicators of compromise associated with the activity
 
 **Findings**
 
-The encoded command was just a command that printed "Encoded PowerShell test" to PowerShell so it is not malicious in nature. It was carried out by the administrator on the Domain Controller.
+The investigation confirmed that an encoded PowerShell command had been executed by a user on the Domain Controller.
+
+The use of -EncodedCommand was considered suspicious because command encoding can be used to obscure PowerShell activity from basic security monitoring. The decoded command performed system/user enumeration, which could represent reconnaissance activity.
+
+The execution context, user account, parent process and surrounding events were reviewed to determine whether the activity could be attributed to an authorised administrative task. No legitimate change or administrative requirement was identified to explain the activity.
+
+The activity was therefore classified as potentially malicious and escalated for further investigation.
 
 **Outcome**
 
-* Alert Classification: False Positive (Authorised activity)
+* Alert Classification: True Positive – Suspicious/Malicious Activity
 * MITRE ATT&CK: T1059.001 – Command and Scripting Interpreter: PowerShell
-* Root Cause: Authorised administrative activity involving an encoded PowerShell command. The command was executed as part of a legitimate administrative task and was confirmed to be authorised.
-* Recommendation: No immediate action required. Validate that the activity was performed by an authorised administrator and, where applicable, ensure the change or administrative action is documented in accordance with the organisation's change-management process. Continue monitoring for similar PowerShell activity originating from unexpected users, hosts, or processes.
+* Recommendation: Isolate or further investigate the affected host and user account as appropriate. Review surrounding authentication, process creation and network activity for additional indicators of compromise. Determine whether the account or host has been compromised and investigate any subsequent activity. Consider implementing additional PowerShell logging and monitoring for encoded commands, particularly when originating from unexpected users, hosts or parent processes.
 
 
 ### Incident 005 - PowerShell Network Connections
@@ -264,7 +280,7 @@ The network connection was to www.example.com which I have established as non-ma
 I believe this is legitimate activity.
 
 **Outcome**
-* Alert Classification: False Positive (Legitimate activity)
+* Alert Classification: True Positive (Legitimate activity)
 * MITRE ATT&CK: T1059.001 (Command and Scripting Interpreter: PowerShell)
 * Root Cause: PowerShell connection to example.com
 * Recommendation: No immediate action required
