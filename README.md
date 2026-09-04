@@ -21,6 +21,26 @@ The lab replicates a small corporate network where a Windows Server 2022 Domain 
 * Log Ingestion and Analysis
 * Detection rules and dashboards
 
+**Network Diagram**
+
+<img width="750" height="500" alt="WhatsApp Image 2026-09-04 at 14 55 07" src="https://github.com/user-attachments/assets/96391944-9f31-4640-9015-541226ca4a76" />
+
+## SOC Investigation Workflow
+
+```mermaid
+flowchart LR
+    A[Alert Generated] --> B[Validate Detection]
+    B --> C[Identify User / Host]
+    C --> D[Review Relevant Events]
+    D --> E[Examine Process / Authentication / Network Activity]
+    E --> F[Correlate Surrounding Activity]
+    F --> G[Threat Intelligence Enrichment]
+    G --> H[Determine Classification]
+    H --> I[Map to MITRE ATT&CK]
+    I --> J[Document Findings]
+    J --> K[Recommend Response]
+```
+
 ## Objectives
 
 The project aims to simulate common security scenarios such as:
@@ -31,6 +51,8 @@ The project aims to simulate common security scenarios such as:
 * Suspicious authentication activity
 * PowerShell abuse
 * Account manipulation
+
+The overall objective is to gain practical experience with the technologies and investigation processes used by SOC analysts
 
 ## Detection Engineering
 
@@ -309,6 +331,58 @@ It is important to note that a clean VirusTotal result does not by itself prove 
 * MITRE ATT&CK: T1059.001 – Command and Scripting Interpreter: PowerShell
 * Root Cause: An authorised PowerShell process established an outbound network connection to www.example.com as part of a controlled security lab simulation.
 * Recommendation: No immediate action required. Continue monitoring PowerShell network activity and investigate connections to unknown, suspicious or known-malicious destinations. Where appropriate, correlate network connection events with process creation, user activity and other endpoint telemetry to identify potentially malicious PowerShell behaviour.
+
+## Skills demonstrated
+
+SIEM
+* Splunk Enterprise
+* SPL
+* Log ingestion
+* Alert creation
+* Security event analysis
+* Event correlation
+
+Windows Security
+* Active Directory
+* Event Logs
+* Windows Server 2022
+* Sysmon
+* PowerShell
+
+Detection Engineering
+* Authentication monitoring
+* Account creation detection
+* Privileged group monitoring
+* Encoded PowerShell detection
+* PowerShell network monitoring
+
+Investigation
+* Triage
+* False-positive analysis
+* User and host investigation
+* Process investigation
+* Command-line analysis
+* Network investigation
+* Treat-intelligence enrichment
+
+Frameworks and Intelligence
+* MITRE ATT&CK
+* VirusTotal
+
+## Key Lessons
+
+The project demonstrated that receiving an alert is only the beginning of a SOC investigation.
+
+From there, I learned I must focus on:
+
+* What happened?
+* Who performed the activity?
+* Which host was involved?
+* Was the activity authorised?
+* What happened immediately before or after the alert?
+* Are the indicators of compromise?
+
+
 
 
 
