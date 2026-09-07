@@ -1,11 +1,28 @@
 # Active-Directory-Splunk-SOC-Lab
-A simulated SOC environment using Active Directory, Splunk SIEM, Windows Server, and Ubuntu to investigate security incidents
+A simulated enterprise SOC environment built to practice security monitoring, SIEM detection engineering, alert triage and incident investigation.
+
+The lab uses Windows Server 2022, Active Directory, Sysmon, Splunk Universal Forwarder, and Splunk Enterprise running on Ubuntu. Security telemetry is generated in the Windows environment, forwarded to Splunk and investigated using SPL queries.
+
+![Splunk](https://img.shields.io/badge/SIEM-Splunk-black)
+![Windows Server](https://img.shields.io/badge/Windows%20Server-2022-blue)
+![Active Directory](https://img.shields.io/badge/Active%20Directory-Lab-blue)
+![MITRE ATT&CK](https://img.shields.io/badge/MITRE%20ATT%26CK-Mapped-red)
+
 
 ## Overview
 
 This project is a simulated enterprise Active Directory environment designed to demonstrate SOC monitoring, Windows security event monitoring, threat detection and incident investigation.
 
 The lab replicates a small corporate network where a Windows Server 2022 Domain Controller provides identity and access management, while Splunk acts as the SIEM. I am running Splunk Universal Forwarder to send Windows Event Logs to a Splunk Enterprise instance running on Ubuntu.
+
+## Project Highlights
+
+* Built a simulated Windows enterprise environment using Windows Server 2022 and Active Directory.
+* Forwarded Windows Security and Sysmon telemetry to Splunk Enterprise using Splunk Universal Forwarder.
+* Created SPL-based detections for failed logins, account creation, privileged group changes and suspicious PowerShell activity.
+* Investigated simulated authentication, process creation and network activity.
+* Classified alerts as authorised, benign or potentially malicious based on available evidence.
+* Documented findings, root cause, MITRE ATT&CK mappings and recommended response actions.
 
 ## Lab Architecture
 
@@ -77,7 +94,7 @@ From there I planned out the incidents I wanted to simulate and respond to. The 
 * Multiple Failed Logins
 * New User Created
 * Privileged Group Change
-* Encoded Powershell
+* Encoded PowerShell
 * PowerShell Network Connections
 
 ### Incident 001 - Multiple Failed Logins
@@ -165,7 +182,7 @@ From here, I can ascertain whether this is legitimate.
 
 * Confirmed Event ID 4720
 * Reviewed the account responsible for creating the user
-* Verified the creation of the account occured on the Domain Controller
+* Verified the creation of the account occurred on the Domain Controller
 * Assessed whether the account creation was authorised
 
 **Findings**
@@ -222,16 +239,15 @@ The detection therefore operated as intended by identifying a security-sensitive
 
 Classification: True Positive – Authorised Activity
 
-MITRE ATT&CK: T1098.007 – Additional Cloud Roles
-
+MITRE ATT&CK: T1098 - Account Manipulation
 **Outcome**
 * Alert Classification: True Positive (Authorised activity)
-* MITRE ATT&CK: T1098.007
+* MITRE ATT&CK: T109
 * Root Cause: Authorised change to a user's privileges
 * Recommendation: No immediate action required. Ensure the privilege escalation follows the change management process and is appropriately documented
 
 
-### Incident 004 - Encoded Powershell
+### Incident 004 - Encoded PowerShell
 
 **Overview**
 I wanted to simulate potentially malicious PowerShell activity using an encoded command. Attackers commonly use PowerShell and command encoding to obfuscate commands and make malicious activity more difficult to identify during initial detection and investigation. This makes encoded PowerShell activity a useful behaviour for a SOC analyst to investigate.
@@ -254,7 +270,7 @@ The activity generated a Sysmon Event ID 1 (Process Creation) event, which was f
 **Detection**
 
 I created the following Splunk alert to identify PowerShell processes using common encoded-command parameters: "index=main sourcetype="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=1 "-enc" OR "-EncodedCommand" OR "-ec"
-| table _time, host, _raw" and saved it as an alert called "Encoded Command - Powershell".
+| table _time, host, _raw" and saved it as an alert called "Encoded Command - PowerShell".
 
 You can see it was activated here:
 
@@ -316,7 +332,7 @@ I created the following Splunk alert to detect network connections recorded by S
 | search process_name="*powershell.exe"
 | table _time host user process_name destination_ip destination_port protocol' 
 
-and saved as Powershell Network Connection.
+and saved as PowerShell Network Connection.
 
 The alert was successfully triggered when the simulated network connection was established.
 
@@ -356,42 +372,19 @@ It is important to note that a clean VirusTotal result does not by itself prove 
 * Root Cause: An authorised PowerShell process established an outbound network connection to www.example.com as part of a controlled security lab simulation.
 * Recommendation: No immediate action required. Continue monitoring PowerShell network activity and investigate connections to unknown, suspicious or known-malicious destinations. Where appropriate, correlate network connection events with process creation, user activity and other endpoint telemetry to identify potentially malicious PowerShell behaviour.
 
-## Skills demonstrated
+## Technologies Used
 
-SIEM
-* Splunk Enterprise
-* SPL
-* Log ingestion
-* Alert creation
-* Security event analysis
-* Event correlation
-
-Windows Security
-* Active Directory
-* Event Logs
-* Windows Server 2022
-* Sysmon
-* PowerShell
-
-Detection Engineering
-* Authentication monitoring
-* Account creation detection
-* Privileged group monitoring
-* Encoded PowerShell detection
-* PowerShell network monitoring
-
-Investigation
-* Triage
-* False-positive analysis
-* User and host investigation
-* Process investigation
-* Command-line analysis
-* Network investigation
-* Treat-intelligence enrichment
-
-Frameworks and Intelligence
-* MITRE ATT&CK
-* VirusTotal
+| Category | Technologies |
+|---|---|
+| SIEM | Splunk Enterprise, SPL |
+| Operating Systems | Windows Server 2022, Ubuntu |
+| Identity | Active Directory, users, groups and OUs |
+| Telemetry | Windows Security Event Logs, Sysmon |
+| Log Collection | Splunk Universal Forwarder |
+| Investigation | Event correlation, process analysis, authentication analysis |
+| Threat Intelligence | VirusTotal |
+| Framework | MITRE ATT&CK |
+| Virtualisation | VMware Workstation |
 
 
 ## Key Lessons
@@ -405,7 +398,7 @@ From there, I learned I must focus on:
 * Which host was involved?
 * Was the activity authorised?
 * What happened immediately before or after the alert?
-* Are the indicators of compromise?
+* Are there indicators of compromise?
 
 
 
