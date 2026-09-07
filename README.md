@@ -63,7 +63,6 @@ flowchart LR
 The project aims to simulate common security scenarios such as:
 
 * Brute force attacks
-* Password spraying
 * Privileged account changes
 * Suspicious authentication activity
 * PowerShell abuse
