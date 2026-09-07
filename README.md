@@ -115,11 +115,21 @@ I reviewed:
 
 **Findings**
 
-The alert found multiple failed password attempts. However, the IP address of the source of the requests is an internal IP address (127.0.0.1) so I have deemed this as regular behaviour(i.e mistakenly writing the wrong password). This is a **false positive** alert.
+Findings
+
+The detection identified multiple failed authentication attempts (Windows Event ID 4625) against the monitored system. The authentication attempts originated from "127.0.0.1", the local loopback address, indicating that the activity was generated locally on the monitored host rather than from a remote source.
+
+Review of the available telemetry did not identify additional indicators of compromise or suspicious follow-on activity. Based on the simulated environment and the absence of supporting malicious activity, the authentication failures were assessed as benign activity, potentially consistent with an incorrectly entered password or other legitimate local authentication behaviour.
+
+The alert itself functioned as intended by identifying the repeated failed authentication attempts. However, the underlying activity was determined to be non-malicious.
+
+Classification: True Positive – Benign Activity
+
+MITRE ATT&CK: T1110.001 – Password Guessing
 
 **Outcome**
 
-* Alert Classification: False Positive
+* Alert Classification: True Positive - Benign
 * MITRE ATT&CK: T1110, Brute Force
 * Root Cause: Authorised security testing
 * Recommendation: No remediation required. Consider excluding events generated from internal sources brute-force detections.
