@@ -393,6 +393,7 @@ Frameworks and Intelligence
 * MITRE ATT&CK
 * VirusTotal
 
+
 ## Key Lessons
 
 The project demonstrated that receiving an alert is only the beginning of a SOC investigation.
