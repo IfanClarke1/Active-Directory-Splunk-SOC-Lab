@@ -115,8 +115,6 @@ I reviewed:
 
 **Findings**
 
-Findings
-
 The detection identified multiple failed authentication attempts (Windows Event ID 4625) against the monitored system. The authentication attempts originated from "127.0.0.1", the local loopback address, indicating that the activity was generated locally on the monitored host rather than from a remote source.
 
 Review of the available telemetry did not identify additional indicators of compromise or suspicious follow-on activity. Based on the simulated environment and the absence of supporting malicious activity, the authentication failures were assessed as benign activity, potentially consistent with an incorrectly entered password or other legitimate local authentication behaviour.
@@ -172,7 +170,15 @@ From here, I can ascertain whether this is legitimate.
 
 **Findings**
 
-The alert correctly found the creation of a new user account. The administrator account was responsible for it and it occured on the Domain Controller. I have deemed this an authorised change.
+The detection successfully identified the creation of a new user account through Windows Security Event ID 4720. The account was created by the "Administrator" account on the Domain Controller.
+
+Review of the available event data did not identify any additional suspicious activity associated with the account creation. Within the context of the simulated environment, the account creation was assessed as an authorised administrative change.
+
+The detection therefore operated as expected and correctly identified the relevant security event. However, the underlying activity was determined to be legitimate rather than malicious.
+
+Classification: True Positive – Authorised Activity
+
+MITRE ATT&CK: T1136 – Create Account
 
 **Outcome**
 
@@ -208,7 +214,15 @@ The "User added to privileged group" alert I created earlier was activated and i
 
 **Findings**
 
-The alert correctly found a user being added to a privileged group. The administrator account was responsible for it and it occured on the Domain Controller. I have deemed this an authorised change.
+The detection successfully identified the addition of a user account to a privileged security group through Windows Security Event ID 4728. The change was performed by the "Administrator" account on the Domain Controller.
+
+As membership changes to privileged groups can result in elevated access, the activity was reviewed as a potential privilege escalation event. The available telemetry did not identify any additional suspicious activity associated with the change, and the modification was consistent with an authorised administrative action within the simulated environment.
+
+The detection therefore operated as intended by identifying a security-sensitive change to privileged group membership. The underlying activity was assessed as legitimate and did not require remediation.
+
+Classification: True Positive – Authorised Activity
+
+MITRE ATT&CK: T1098.007 – Additional Cloud Roles
 
 **Outcome**
 * Alert Classification: True Positive (Authorised activity)
